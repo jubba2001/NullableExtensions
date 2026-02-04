@@ -52,11 +52,17 @@ static void Test(string? s, object? obj, int? i)
 
 static class NullableExtensions
 {
-    extension(object?)
+    extension<T>(T?) where T : class
     {
-        public static bool operator !(object? obj) => obj == null;
-        public static bool operator true(object? obj) => obj != null;
-        public static bool operator false(object? obj) => obj == null;
+        public static bool operator !(T? t) => t == null;
+        public static bool operator true(T? t) => t != null;
+        public static bool operator false(T? t) => t == null;
+    }
+    extension<T>(T?) where T : struct
+    {
+        public static bool operator !(T? t) => !t.HasValue;
+        public static bool operator true(T? t) => t.HasValue;
+        public static bool operator false(T? t) => !t.HasValue;
     }
     extension(string?)
     {
@@ -67,10 +73,5 @@ static class NullableExtensions
         // Operator true/false sucks! Expecting this in C# 15:
         // public static implicit operator bool(string? s) => string.IsNullOrEmpty(s);
     }
-    extension<T>(T?) where T : struct
-    {
-        public static bool operator !(T? t) => !t.HasValue;
-        public static bool operator true(T? t) => t.HasValue;
-        public static bool operator false(T? t) => !t.HasValue;
-    }
 }
+
