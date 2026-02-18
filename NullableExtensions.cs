@@ -73,5 +73,15 @@ static class NullableExtensions
         // Operator true/false sucks! Expecting this in C# 15:
         // public static implicit operator bool(string? s) => string.IsNullOrEmpty(s);
     }
+    extension(bool?)
+    {
+        public static bool operator !(bool? t)
+            => !t.HasValue || !t.Value;
+        public static bool operator true(bool? t)
+            => t.HasValue && t.Value;
+        public static bool operator false(bool? t)
+            => !t.HasValue || !t.Value;
+    }
 }
+
 
